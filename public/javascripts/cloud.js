@@ -4,16 +4,17 @@ var Cloud = (function(Utils, Drawer) {
   var socket = io.connect('https://85.179.64.157:3000');
   var data = {};
 
+
+  var audioContext    = new AudioContext();
+  var realAudioInput  = null,
+      analyserNode    = null;
+
+
   //connect to socket
   var user_id         = Utils.userIDgenerator();
   data                = {'user_id': user_id};
 
-  var peer = new Peer('mobile_'+user_id, {host: '85.179.64.157', secure: true, port: 3002, path: '/rt', debug: 0});
-
-
-  //connect to socket
-  var user_id         = Utils.userIDgenerator();
-  data                = {'user_id': user_id};
+  var peer = new Peer('mobile_'+user_id, {host: '85.179.64.157', secure: true, port: 3002, path: '/rt', debug: 3});
 
   socket.emit('cloud-connect', data);
 
@@ -26,6 +27,7 @@ var Cloud = (function(Utils, Drawer) {
 
 
   peer.on('call', function(call) {
+    alert('WIIIII');
     // Answer the call, providing our mediaStream
     call.answer();
 

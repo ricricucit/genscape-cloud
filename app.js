@@ -9,7 +9,10 @@ var app = express();
 
 var ExpressPeerServer = require('peer').ExpressPeerServer;
 
-var server = app.listen(9000);
+var server = app.listen(3002);
+
+
+app.use('/rt', ExpressPeerServer(server, {debug: 3}));
 
 
 
@@ -27,12 +30,6 @@ app.use(express.static(__dirname + '/node_modules'));
 app.get('/', function(req, res){
   res.sendFile(__dirname + '/views/index.html');
 });
-
-/* GET users listing. */
-app.get('/peerjs', function(req, res) {
-  res.send('respond with PeerJS stuff');
-});
-app.use('/rt', ExpressPeerServer(server, {debug: 0}));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
