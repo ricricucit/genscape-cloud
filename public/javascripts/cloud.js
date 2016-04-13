@@ -101,9 +101,6 @@ var Cloud = (function(Utils, Drawer) {
 
   //expose public vars and/or function
   return {
-    socket            : socket,
-    clickRedBtn       : clickRedBtn,
-    stopDrawings      : stopDrawings
   };
 
 
