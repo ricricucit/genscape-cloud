@@ -1,14 +1,21 @@
 var Cloud = (function(Utils, Drawer) {
 
   //expose a global socket for client (this app)
-  //var socket = io();
+  var socket = io.connect('https://85.179.64.157:3000');
   var data = {};
 
   //connect to socket
   var user_id         = Utils.userIDgenerator();
   data                = {'user_id': user_id};
 
-  var peer = new Peer('mobile_'+user_id, {host: '85.179.64.157', port: 3002, path: '/rt', debug: 0});
+  var peer = new Peer('mobile_'+user_id, {host: '85.179.64.157', secure: true, port: 3002, path: '/rt', debug: 0});
+
+
+  //connect to socket
+  var user_id         = Utils.userIDgenerator();
+  data                = {'user_id': user_id};
+
+  socket.emit('cloud-connect', data);
 
   // peer.on('connection', function(conn) {
   //   conn.on('data', function(data){
