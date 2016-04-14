@@ -1,7 +1,7 @@
 var Cloud = (function(Utils, Drawer) {
 
   //expose a global socket for client (this app)
-  var socket = io.connect('https://85.179.64.157:3000');
+  var socket = io.connect('https://niagaraniagara.noip.me:3000');
   var data = {};
 
 
