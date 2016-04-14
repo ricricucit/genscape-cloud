@@ -14,7 +14,7 @@ var Cloud = (function(Utils, Drawer) {
   var user_id         = Utils.userIDgenerator();
   data                = {'user_id': user_id};
 
-  var peer = new Peer('mobile_'+user_id, {host: '85.179.64.157', secure: true, port: 3002, path: '/rt', debug: 3});
+  var peer = new Peer('mobile_'+user_id, {host: 'https://niagaraniagara.noip.me', secure: true, port: 3002, path: '/rt', debug: 3});
 
   socket.emit('cloud-connect', data);
 
