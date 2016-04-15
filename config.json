@@ -1,4 +1,4 @@
 {
-  "ssl_private_key": "/certificates/niagara-nopass-key.pem",
-  "ssl_certificate": "/certificates/niagara-cert.pem"
+  "ssl_private_key": "./certificates/niagara-nopass-key.pem",
+  "ssl_certificate": "./certificates/niagara-cert.pem"
 }
