@@ -14,6 +14,9 @@ var Cloud = (function(Utils, Drawer) {
 
 
   //let local server know that cloud server connects
+  var user_id         = Utils.userIDgenerator();
+  data                = {'user_id': user_id};
+
   live_socket.emit('cloud-connect', data);
   //let cloud server register itself
   cloud_socket.emit('cloud-connect', data);
