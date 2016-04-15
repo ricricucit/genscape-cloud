@@ -1,11 +1,8 @@
-var Cloud = (function(Utils, Drawer) {
+var Client = (function(Utils, Drawer) {
 
-  //expose a global live_socket for client (this app)
-  var live_socket = io.connect('https://niagaraniagara.noip.me:3000');
+  //expose a global socket for client (this app)
   var cloud_socket = io();
   var data = {};
-
-  var streamFromLive = {}
 
 
   var audioContext    = new AudioContext();
@@ -13,12 +10,11 @@ var Cloud = (function(Utils, Drawer) {
       analyserNode    = null;
 
 
-  //let local server know that cloud server connects
-  live_socket.emit('cloud-connect', data);
-  //let cloud server register itself
-  cloud_socket.emit('cloud-connect', data);
+  //connect to socket
+  var user_id         = Utils.userIDgenerator();
+  data                = {'user_id': user_id};
 
-  var peer = new Peer('cloud', {host: 'niagaraniagara.noip.me',
+  var peer = new Peer('mobile_'+user_id, {host: 'niagaraniagara.noip.me',
                                           secure: true,
                                           port: 3002,
                                           path: '/rt',
@@ -47,6 +43,7 @@ var Cloud = (function(Utils, Drawer) {
                                                   ]}
                                         });
 
+  cloud_socket.emit('client-connect', data);
 
   // peer.on('connection', function(conn) {
   //   conn.on('data', function(data){
@@ -55,28 +52,13 @@ var Cloud = (function(Utils, Drawer) {
   //   });
   // });
 
-
-  cloud_socket.on('client-joined', function(data){
-    alert('new user...calling him: ' + 'mobile_'+data.users[data.users.length-1].user_id);
-    var call = peer.call('mobile_'+data.users[data.users.length-1].user_id, streamFromLive);
-
-    console.log('new user!', data);
-  });
-
-
-
   peer.on('call', function(call) {
-    alert('Cloud is connected');
     // Answer the call, providing our mediaStream
     call.answer();
 
     call.on('stream', function(remoteStream){
       // Show stream in some video/canvas element.
       console.log('Stream HERE!',remoteStream);
-
-      streamFromLive = remoteStream;
-      //TODO: HERE CALL CLOUD PEERS
-
 
       // The Following structure creates this graph:
       // realAudioInput --> analyserNode --> audioProcessor

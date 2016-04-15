@@ -1,38 +1,130 @@
+// middleware to isolate some funcs
+var middleware = require("./middleware.js");
+
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
-var logger = require('morgan');
+//var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
-var app = express();
-
-var ExpressPeerServer = require('peer').ExpressPeerServer;
-
-var server = app.listen(3002);
-
-
-app.use('/rt', ExpressPeerServer(server, {debug: 3}));
-
+var app_cloud = express();
 
 
 // uncomment after placing your favicon in /public
-//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
-app.use(logger('dev'));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+//app_cloud.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+//app_cloud.use(logger('dev'));
+app_cloud.use(bodyParser.json());
+app_cloud.use(bodyParser.urlencoded({ extended: false }));
+app_cloud.use(cookieParser());
+app_cloud.use(express.static(path.join(__dirname, 'public')));
+
+app_cloud.use(express.static(__dirname + '/public'));
+app_cloud.use(express.static(__dirname + '/node_modules'));
 
 
-app.use(express.static(__dirname + '/public'));
-app.use(express.static(__dirname + '/node_modules'));
-app.get('/', function(req, res){
+
+var config = require("./config.json");
+// Require file module
+const fs = require('fs');
+// set HTTPS createServer
+var privateKey = fs.readFileSync( config.ssl_private_key );
+var certificate = fs.readFileSync( config.ssl_certificate );
+
+// create needed servers
+var https_cloud = require('https').createServer( {
+                                            key: privateKey,
+                                            cert: certificate
+                                        }, app_cloud);
+
+var ExpressPeerServer = require('peer').ExpressPeerServer;
+
+var io_cloud = require('socket.io')(https_cloud);
+
+
+
+
+var server = app_cloud.listen(3002);
+app_cloud.use('/rt', ExpressPeerServer(server, {debug: 3}));
+
+
+//start express LIVE
+https_cloud.listen(9000, function(){
+  console.log('CLOUD listening events on heroku?:9000');
+}).on('error', function(err) {
+  console.log('\n------------------------------------\nNetworking ERROR.\nCannot listen to: cloud:3000\nPlease check your Network settings\n------------------------------------\n');
+  process.exit();
+});
+
+
+
+//on connection creation, a socket is created
+io_cloud.on('connection', function(socket){
+
+  console.log('\n✆ Cloud connected, ID: ', socket.client.id);
+
+
+  socket.on('disconnect', function(){
+
+    console.log('user, #' + socket.client.id + ' disconnected from CLOUD');
+
+    middleware.removeClient(socket.client.id);
+
+    if(!middleware.stageIsConnected()){
+      console.error('\n☹ STAGE is not present.')
+    }
+  });
+
+  //live connection
+  socket.on('cloud-connect', function(data){
+    middleware.addClient(socket.client.id, "cloud", data);
+    var liveObj = middleware.getLiveObj()
+    socket.broadcast.emit("cloud-joined", liveObj);
+  });
+
+  //live connection
+  socket.on('client-connect', function(data){
+    middleware.addClient(socket.client.id, "cloud", data);
+    var liveObj = middleware.getLiveObj()
+    socket.broadcast.emit("client-joined", liveObj);
+  });
+
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+app_cloud.get('/', function(req, res){
   res.sendFile(__dirname + '/views/index.html');
 });
 
+app_cloud.get('/client', function(req, res){
+  res.sendFile(__dirname + '/views/client.html');
+});
+
+
+
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app_cloud.use(function(req, res, next) {
   var err = new Error('Not Found');
   err.status = 404;
   next(err);
@@ -42,8 +134,8 @@ app.use(function(req, res, next) {
 
 // development error handler
 // will print stacktrace
-if (app.get('env') === 'development') {
-  app.use(function(err, req, res, next) {
+if (app_cloud.get('env') === 'development') {
+  app_cloud.use(function(err, req, res, next) {
     res.status(err.status || 500);
     res.render('error', {
       message: err.message,
@@ -54,7 +146,7 @@ if (app.get('env') === 'development') {
 
 // production error handler
 // no stacktraces leaked to user
-app.use(function(err, req, res, next) {
+app_cloud.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error', {
     message: err.message,
@@ -63,4 +155,4 @@ app.use(function(err, req, res, next) {
 });
 
 
-module.exports = app;
+module.exports = app_cloud;
