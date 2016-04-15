@@ -36,6 +36,11 @@ var https_cloud = require('https').createServer( {
                                             key: privateKey,
                                             cert: certificate
                                         }, app_cloud);
+var https_stream_cloud = require('https').createServer( {
+                                            key: privateKey,
+                                            cert: certificate
+                                        }, app_cloud);
+
 
 var ExpressPeerServer = require('peer').ExpressPeerServer;
 
@@ -44,9 +49,17 @@ var io_cloud = require('socket.io')(https_cloud);
 
 
 
-var server = app_cloud.listen(3002);
-app_cloud.use('/rt', ExpressPeerServer(server, {debug: 3}));
 
+
+//start express LIVE (for streaming)
+https_stream_cloud.listen(3002, function(){
+  console.log('CLOUD listening STREAM events CloudServer:3002');
+}).on('error', function(err) {
+  console.log('\n------------------------------------\nNetworking ERROR.\nCannot listen to: 3002 on CloudServer\nPlease check your Network settings\n------------------------------------\n');
+  process.exit();
+});
+
+app_cloud.use('/rt', ExpressPeerServer(https_stream_cloud, {debug: 3}));
 
 //start express LIVE
 https_cloud.listen(9000, function(){
