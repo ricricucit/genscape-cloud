@@ -10,6 +10,8 @@ var bodyParser = require('body-parser');
 
 var app_cloud = express();
 
+app_cloud.set('port', 9000);
+
 
 // uncomment after placing your favicon in /public
 //app_cloud.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
