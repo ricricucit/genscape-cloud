@@ -62,8 +62,8 @@ https_stream_cloud.listen(3002, function(){
 app_cloud.use('/rt', ExpressPeerServer(https_stream_cloud, {debug: 3}));
 
 //start express LIVE
-https_cloud.listen(3000, function(){
-  console.log('CLOUD listening events on heroku?:3000');
+https_cloud.listen(9000, function(){
+  console.log('CLOUD listening events on heroku?:9000');
 }).on('error', function(err) {
   console.log('\n------------------------------------\nNetworking ERROR.\nCannot listen to: cloud:3000\nPlease check your Network settings\n------------------------------------\n');
   process.exit();
