@@ -10,7 +10,7 @@ var bodyParser = require('body-parser');
 
 var app = express();
 
-var regular_port = process.env.PORT || 9000;
+var regular_port = normalizePort(process.env.PORT || 9000);
 
 
 app.set('port', regular_port);
@@ -174,3 +174,24 @@ app.use(function(err, req, res, next) {
 
 
 module.exports = app;
+
+
+/**
+ * Normalize a port into a number, string, or false.
+ */
+
+function normalizePort(val) {
+  var port = parseInt(val, 10);
+
+  if (isNaN(port)) {
+    // named pipe
+    return val;
+  }
+
+  if (port >= 0) {
+    // port number
+    return port;
+  }
+
+  return false;
+}
