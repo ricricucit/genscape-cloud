@@ -8,7 +8,8 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
-var app = express();
+var app         = express();
+var app_socket  = express();
 
 var regular_port = (process.env.PORT || 9000);
 
@@ -40,27 +41,52 @@ var https_cloud = require('https').createServer( {
                                             key: privateKey,
                                             cert: certificate
                                         }, app);
-/*
+
+var https_socket = require('https').createServer( {
+                                            key: privateKey,
+                                            cert: certificate
+                                        }, app_socket);
+
+
 var https_stream_cloud = require('https').createServer( {
                                             key: privateKey,
                                             cert: certificate
                                         }, app);
-*/
-
-// var ExpressPeerServer = require('peer').ExpressPeerServer;
-
-// var io_cloud = require('socket.io')(https_cloud);
 
 
-app.listen(regular_port, function(){
-  console.log('CLOUD listening events on heroku:' + regular_port);
+var ExpressPeerServer = require('peer').ExpressPeerServer;
+
+var io_cloud = require('socket.io')(https_socket);
+
+
+//switching to have heroku working.... (weird)
+if(process.env.PORT){
+  app.listen(regular_port, function(){
+    console.log('CLOUD listening APP on heroku:' + regular_port);
+  }).on('error', function(err) {
+    console.log('\n------------------------------------\nNetworking ERROR.\nCannot listen to: cloud:' + regular_port + '\nPlease check your Network settings\n------------------------------------\n');
+    process.exit();
+  });
+
+}else{
+
+  https_cloud.listen(regular_port, function(){
+    console.log('CLOUD listening APP events CloudServer:3002');
+  }).on('error', function(err) {
+    console.log('\n------------------------------------\nNetworking ERROR.\nCannot listen to: 9001 on CloudServer\nPlease check your Network settings\n------------------------------------\n');
+    process.exit();
+  });
+
+}
+
+
+https_socket.listen(9001, function(){
+  console.log('CLOUD listening SOCKET events CloudServer:9001');
 }).on('error', function(err) {
-  console.log('\n------------------------------------\nNetworking ERROR.\nCannot listen to: cloud:' + regular_port + '\nPlease check your Network settings\n------------------------------------\n');
+  console.log('\n------------------------------------\nNetworking ERROR.\nCannot listen to: 9001 on CloudServer\nPlease check your Network settings\n------------------------------------\n');
   process.exit();
 });
 
-
-/*
 //start express LIVE (for streaming)
 https_stream_cloud.listen(3002, function(){
   console.log('CLOUD listening STREAM events CloudServer:3002');
@@ -107,8 +133,6 @@ io_cloud.on('connection', function(socket){
   });
 
 });
-*/
-
 
 
 
