@@ -6,7 +6,7 @@
 
 var app = require('../app');
 var debug = require('debug')('genscape-cloud:server');
-//var http = require('http');
+var http = require('http');
 
 /**
  * Get port from environment and store in Express.
@@ -19,43 +19,15 @@ app.set('port', port);
  * Create HTTP server.
  */
 
-//var server = http.createServer(app);
-
-var config = require("../config.json");
-// Require file module
-const fs = require('fs');
-// set HTTPS createServer
-var privateKey = fs.readFileSync( config.ssl_private_key );
-var certificate = fs.readFileSync( config.ssl_certificate );
-
-// create needed servers
-var server = require('https').createServer( {
-                                            key: privateKey,
-                                            cert: certificate
-                                        }, app);
-
-//start express LIVE
-server.listen(port, function(){
-  console.log('CLOUD app listening events on heroku?:3000');
-});
-server.on('error', onError);
-server.on('listening', onListening);
-
-
-/*.on('error', function(err) {
-  console.log('\n------------------------------------\nNetworking ERROR on startup.\nCannot listen to: cloud:'+ port +'\nPlease check your Network settings\n------------------------------------\n' + err + '\n');
-  process.exit();
-});*/
-
-
+var server = http.createServer(app);
 
 /**
  * Listen on provided port, on all network interfaces.
  */
 
-/*server.listen(port);
+server.listen(port);
 server.on('error', onError);
-server.on('listening', onListening);*/
+server.on('listening', onListening);
 
 /**
  * Normalize a port into a number, string, or false.
