@@ -9,6 +9,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
 var app = express();
+var socket_app = express();
 
 
 // uncomment after placing your favicon in /public
@@ -40,7 +41,7 @@ var server = require('https').createServer( {
 var socket_server = require('https').createServer( {
                                             key: privateKey,
                                             cert: certificate
-                                        }, app);
+                                        }, socket_app);
 
 var https_stream_cloud = require('https').createServer( {
                                             key: privateKey,
@@ -49,8 +50,6 @@ var https_stream_cloud = require('https').createServer( {
 
 
 var ExpressPeerServer = require('peer').ExpressPeerServer;
-
-
 
 
 

@@ -3,7 +3,7 @@ var Cloud = (function(Utils, Drawer) {
   //expose a global live_socket for client (this app)
   var live_socket = io.connect('https://niagaraniagara.noip.me:3000');
 
-  var host = location.origin + ':9001';
+  var host = location.hostname + ':9001';
   var cloud_socket = io(host);
 
   var data = {};
