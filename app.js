@@ -10,10 +10,8 @@ var bodyParser = require('body-parser');
 
 var app = express();
 
-var regular_port = process.env.PORT || 9000;
+var regular_port = (process.env.PORT || 9000);
 
-
-app.set('port', regular_port);
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
