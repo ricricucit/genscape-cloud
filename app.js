@@ -14,12 +14,6 @@ var regular_port = normalizePort(process.env.PORT || 9000);
 
 
 app.set('port', regular_port);
-app.listen(regular_port, function(){
-  console.log('CLOUD listening events on heroku?:9000');
-}).on('error', function(err) {
-  console.log('\n------------------------------------\nNetworking ERROR.\nCannot listen to: cloud:' + regular_port + '\nPlease check your Network settings\n------------------------------------\n');
-  process.exit();
-});
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
@@ -72,7 +66,7 @@ https_stream_cloud.listen(3002, function(){
 app.use('/rt', ExpressPeerServer(https_stream_cloud, {debug: 3}));
 
 //start express LIVE
-https_cloud.listen(9001, function(){
+https_cloud.listen(regular_port, function(){
   console.log('CLOUD listening events on heroku?:9000');
 }).on('error', function(err) {
   console.log('\n------------------------------------\nNetworking ERROR.\nCannot listen to: cloud:' + regular_port + '\nPlease check your Network settings\n------------------------------------\n');
