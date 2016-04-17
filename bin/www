@@ -13,7 +13,7 @@ var debug = require('debug')('genscape-cloud:server');
  */
 
 var port = normalizePort(process.env.PORT || 9000);
-app.set('port', port);
+//app.set('port', port);
 
 /**
  * Create HTTP server.
@@ -38,10 +38,10 @@ var server = require('https').createServer( {
 /*server.listen(port, function(){
   console.log('CLOUD listening events on heroku?:9000');
 }).on('error', function(err) {
-  console.log('\n------------------------------------\nNetworking ERROR.\nCannot listen to: cloud:3000\nPlease check your Network settings\n------------------------------------\n' + err + '\n');
+  console.log('\n------------------------------------\nNetworking ERROR on startup.\nCannot listen to: cloud:'+ port +'\nPlease check your Network settings\n------------------------------------\n' + err + '\n');
   process.exit();
-});
-*/
+});*/
+
 
 
 /**
