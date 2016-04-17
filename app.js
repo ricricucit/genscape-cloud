@@ -10,7 +10,9 @@ var bodyParser = require('body-parser');
 
 var app = express();
 
-var regular_port = (process.env.PORT || 9000);
+var regular_port  = (process.env.PORT || 9000);
+var stream_port   = (process.env.PORT || 3002);
+
 
 
 // uncomment after placing your favicon in /public
@@ -57,10 +59,10 @@ https_cloud.listen(regular_port, function(){
 });
 
 //start express LIVE (for streaming)
-https_stream_cloud.listen(3002, function(){
-  console.log('CLOUD listening STREAM events CloudServer:3002');
+https_stream_cloud.listen(stream_port, function(){
+  console.log('CLOUD listening STREAM events CloudServer:'+stream_port);
 }).on('error', function(err) {
-  console.log('\n------------------------------------\nNetworking ERROR.\nCannot listen to: 3002 on CloudServer\nPlease check your Network settings\n------------------------------------\n');
+  console.log('\n------------------------------------\nNetworking ERROR.\nCannot listen to: ' + stream_port + ' on CloudServer\nPlease check your Network settings\n------------------------------------\n');
   process.exit();
 });
 
