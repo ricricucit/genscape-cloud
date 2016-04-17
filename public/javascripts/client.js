@@ -12,7 +12,7 @@ var Client = (function(Utils, Drawer) {
 
   //connect to socket
   var user_id         = Utils.userIDgenerator();
-  data                = {'user_id': user_id};
+  data                = {'user_id': 'mobile_'+user_id};
 
   var peer = new Peer('mobile_'+user_id, {host: 'niagaraniagara.noip.me',
                                           secure: true,

@@ -97,9 +97,9 @@ io_cloud.on('connection', function(socket){
 
   //live connection
   socket.on('client-connect', function(data){
-    middleware.addClient(socket.client.id, "cloud", data);
-    var liveObj = middleware.getLiveObj()
-    socket.broadcast.emit("client-joined", liveObj);
+    middleware.addClient(socket.client.id, data.user_id, data);
+    //var liveObj = middleware.getLiveObj();
+    socket.broadcast.emit("client-joined", data);
   });
 
 });

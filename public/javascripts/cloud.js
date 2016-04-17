@@ -60,8 +60,8 @@ var Cloud = (function(Utils, Drawer) {
 
 
   cloud_socket.on('client-joined', function(data){
-    alert('new user...calling him: ' + 'mobile_'+data.users[data.users.length-1].user_id);
-    var call = peer.call('mobile_'+data.users[data.users.length-1].user_id, streamFromLive);
+    alert('new user...calling him: ' + data.user_id);
+    var call = peer.call(data.user_id, streamFromLive);
 
     console.log('new user!', data);
   });
