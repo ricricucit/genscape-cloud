@@ -44,8 +44,7 @@ var https_stream_cloud = require('https').createServer( {
 
 var ExpressPeerServer = require('peer').ExpressPeerServer;
 
-var io_cloud = require('socket.io')(server);
-io_cloud.listen(9001);
+
 
 
 
