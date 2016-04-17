@@ -12,7 +12,7 @@ var app = express();
 
 var regular_port = (process.env.PORT || 9000);
 
-app.set('port', regular_port);
+//app.set('port', regular_port);
 
 
 // uncomment after placing your favicon in /public
@@ -40,11 +40,12 @@ var https_cloud = require('https').createServer( {
                                             key: privateKey,
                                             cert: certificate
                                         }, app);
+/*
 var https_stream_cloud = require('https').createServer( {
                                             key: privateKey,
                                             cert: certificate
                                         }, app);
-
+*/
 
 // var ExpressPeerServer = require('peer').ExpressPeerServer;
 
@@ -58,6 +59,8 @@ https_cloud.listen(regular_port, function(){
   process.exit();
 });
 
+
+/*
 //start express LIVE (for streaming)
 https_stream_cloud.listen(3002, function(){
   console.log('CLOUD listening STREAM events CloudServer:3002');
@@ -67,7 +70,7 @@ https_stream_cloud.listen(3002, function(){
 });
 
 
-/*
+
 app.use('/rt', ExpressPeerServer(https_stream_cloud, {debug: 3}));
 
 
