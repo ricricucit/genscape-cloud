@@ -66,7 +66,7 @@ https_stream_cloud.listen(3002, function(){
   process.exit();
 });
 
-app.use('/rt', ExpressPeerServer(https_stream_cloud, {debug: 3}));
+//app.use('/rt', ExpressPeerServer(https_stream_cloud, {debug: 3}));
 
 
 
