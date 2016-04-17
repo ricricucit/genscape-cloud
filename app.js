@@ -52,6 +52,13 @@ var io_cloud = require('socket.io')(https_cloud);
 
 if(process.env.PORT){
   app.listen(regular_port);
+  //server listening different port than app
+  https_cloud.listen(regular_port, function(){
+    console.log('CLOUD listening events on heroku?:9000');
+  }).on('error', function(err) {
+    console.log('\n------------------------------------\nNetworking ERROR.\nCannot listen to: cloud:' + regular_port + '\nPlease check your Network settings\n------------------------------------\n');
+    process.exit();
+  });
 }else{
   //start express LIVE
   https_cloud.listen(regular_port, function(){
