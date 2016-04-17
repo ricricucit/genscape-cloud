@@ -44,7 +44,7 @@ var https_stream_cloud = require('https').createServer( {
 
 var ExpressPeerServer = require('peer').ExpressPeerServer;
 
-var io_cloud = require('socket.io')(https_cloud);
+var io_cloud = require('socket.io').listen(https_cloud);
 
 
 
@@ -133,6 +133,7 @@ app_cloud.get('/', function(req, res){
 app_cloud.get('/client', function(req, res){
   res.sendFile(__dirname + '/views/client.html');
 });
+
 
 
 
