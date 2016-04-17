@@ -10,7 +10,7 @@ var bodyParser = require('body-parser');
 
 var app = express();
 
-var regular_port = normalizePort(process.env.PORT || 9000);
+var regular_port = process.env.PORT || 9000;
 
 
 app.set('port', regular_port);
@@ -36,7 +36,7 @@ var privateKey = fs.readFileSync( config.ssl_private_key );
 var certificate = fs.readFileSync( config.ssl_certificate );
 
 // create needed servers
-var server = require('https').createServer( {
+var https_cloud = require('https').createServer( {
                                             key: privateKey,
                                             cert: certificate
                                         }, app);
@@ -48,7 +48,7 @@ var https_stream_cloud = require('https').createServer( {
 
 var ExpressPeerServer = require('peer').ExpressPeerServer;
 
-var io_cloud = require('socket.io')(server);
+var io_cloud = require('socket.io')(https_cloud);
 
 
 
@@ -66,7 +66,7 @@ https_stream_cloud.listen(3002, function(){
 app.use('/rt', ExpressPeerServer(https_stream_cloud, {debug: 3}));
 
 //start express LIVE
-server.listen(regular_port, function(){
+https_cloud.listen(regular_port, function(){
   console.log('CLOUD listening events on heroku?:9000');
 }).on('error', function(err) {
   console.log('\n------------------------------------\nNetworking ERROR.\nCannot listen to: cloud:' + regular_port + '\nPlease check your Network settings\n------------------------------------\n');
@@ -174,22 +174,3 @@ app.use(function(err, req, res, next) {
 
 
 module.exports = app;
-
-
-
-
-function normalizePort(val) {
-  var port = parseInt(val, 10);
-
-  if (isNaN(port)) {
-    // named pipe
-    return val;
-  }
-
-  if (port >= 0) {
-    // port number
-    return port;
-  }
-
-  return false;
-}
