@@ -9,7 +9,6 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
 var app = express();
-var socket_app = express();
 
 
 // uncomment after placing your favicon in /public
@@ -37,12 +36,6 @@ var server = require('https').createServer( {
                                             key: privateKey,
                                             cert: certificate
                                         }, app);
-
-var socket_server = require('https').createServer( {
-                                            key: privateKey,
-                                            cert: certificate
-                                        }, socket_app);
-
 var https_stream_cloud = require('https').createServer( {
                                             key: privateKey,
                                             cert: certificate
@@ -51,6 +44,7 @@ var https_stream_cloud = require('https').createServer( {
 
 var ExpressPeerServer = require('peer').ExpressPeerServer;
 
+var io_cloud = require('socket.io')(server);
 
 
 
@@ -71,16 +65,6 @@ server.listen(9000, function(){
   console.log('\n------------------------------------\nNetworking ERROR.\nCannot listen to: cloud:9000\nPlease check your Network settings\n------------------------------------\n');
   process.exit();
 });
-
-//start express LIVE
-socket_server.listen(9001, function(){
-  console.log('CLOUD socket listening events on heroku?:9001');
-}).on('error', function(err) {
-  console.log('\n------------------------------------\nNetworking ERROR.\nCannot listen to: cloud:9001\nPlease check your Network settings\n------------------------------------\n');
-  process.exit();
-});
-
-var io_cloud = require('socket.io')(server);
 
 
 
