@@ -12,7 +12,7 @@ var debug = require('debug')('genscape-cloud:server');
  * Get port from environment and store in Express.
  */
 
-var port = normalizePort(process.env.PORT || 9000);
+var port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
 
 /**
@@ -36,7 +36,7 @@ var server = require('https').createServer( {
 
 //start express LIVE
 server.listen(port, function(){
-  console.log('CLOUD listening events on heroku?:9000');
+  console.log('CLOUD app listening events on heroku?:3000');
 });
 server.on('error', onError);
 server.on('listening', onListening);
