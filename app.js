@@ -50,6 +50,8 @@ var ExpressPeerServer = require('peer').ExpressPeerServer;
 
 var io_cloud = require('socket.io')(server);
 
+io_cloud.set('transports', ['websocket']);
+
 
 
 
