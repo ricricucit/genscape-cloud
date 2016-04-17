@@ -1,3 +1,15 @@
+
+// uncomment after placing your favicon in /public
+//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+app.use(logger('dev'));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(cookieParser());
+app.use(express.static(path.join(__dirname, 'public')));
+
+app.use(express.static(__dirname + '/public'));
+app.use(express.static(__dirname + '/node_modules'));
+
 // middleware to isolate some funcs
 var middleware = require("./middleware.js");
 
@@ -15,16 +27,6 @@ var regular_port = normalizePort(process.env.PORT || 9000);
 
 app.set('port', regular_port);
 
-// uncomment after placing your favicon in /public
-//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
-app.use(logger('dev'));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
-
-app.use(express.static(__dirname + '/public'));
-app.use(express.static(__dirname + '/node_modules'));
 
 
 
