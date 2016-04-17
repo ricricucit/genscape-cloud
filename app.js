@@ -45,6 +45,7 @@ var https_stream_cloud = require('https').createServer( {
 var ExpressPeerServer = require('peer').ExpressPeerServer;
 
 var io_cloud = require('socket.io')(server);
+io_cloud.listen(9001);
 
 
 
@@ -65,7 +66,7 @@ app.use('/rt', ExpressPeerServer(https_stream_cloud, {debug: 3}));
 server.listen(9000, function(){
   console.log('CLOUD listening events on heroku?:9000');
 }).on('error', function(err) {
-  console.log('\n------------------------------------\nNetworking ERROR.\nCannot listen to: cloud:' + regular_port + '\nPlease check your Network settings\n------------------------------------\n');
+  console.log('\n------------------------------------\nNetworking ERROR.\nCannot listen to: cloud:9000\nPlease check your Network settings\n------------------------------------\n');
   process.exit();
 });
 
