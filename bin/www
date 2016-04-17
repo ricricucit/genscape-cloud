@@ -35,12 +35,12 @@ var server = require('https').createServer( {
                                         }, app);
 
 //start express LIVE
-/*server.listen(port, function(){
+server.listen(port, function(){
   console.log('CLOUD listening events on heroku?:9000');
 }).on('error', function(err) {
   console.log('\n------------------------------------\nNetworking ERROR on startup.\nCannot listen to: cloud:'+ port +'\nPlease check your Network settings\n------------------------------------\n' + err + '\n');
   process.exit();
-});*/
+});
 
 
 
