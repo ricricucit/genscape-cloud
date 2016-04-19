@@ -1,7 +1,7 @@
 var Client = (function(Utils, Drawer) {
 
   //expose a global socket for client (this app)
-  var cloud_socket = io();
+  var cloud_socket = io.connect(location.hostname+':9001');
   var data = {};
 
 
