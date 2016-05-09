@@ -11,32 +11,23 @@ var bodyParser = require('body-parser');
 var app         = express();
 var app_socket  = express();
 
-var regular_port = (process.env.PORT || 9000);
-
-//app.set('port', regular_port);
+var regular_port = 9000;
 
 
-// uncomment after placing your favicon in /public
-//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
-// app.use(logger('dev'));
-// app.use(bodyParser.json());
-// app.use(bodyParser.urlencoded({ extended: false }));
-// app.use(cookieParser());
+//config static files routes
 app.use(express.static(path.join(__dirname, 'public')));
-
 app.use(express.static(__dirname + '/public'));
 app.use(express.static(__dirname + '/node_modules'));
 
 
-
+//read configuration file
 var config = require("./config.json");
 // Require file module
 const fs = require('fs');
-// set HTTPS createServer
+// get keys
 var privateKey = fs.readFileSync( config.ssl_private_key );
 var certificate = fs.readFileSync( config.ssl_certificate );
-
-// create needed servers
+// create needed servers using certificates
 var https_cloud = require('https').createServer( {
                                             key: privateKey,
                                             cert: certificate
@@ -47,37 +38,16 @@ var https_socket = require('https').createServer( {
                                             cert: certificate
                                         }, app_socket);
 
-
-// var https_stream_cloud = require('https').createServer( {
-//                                             key: privateKey,
-//                                             cert: certificate
-//                                         }, app);
-
-
-// var ExpressPeerServer = require('peer').ExpressPeerServer;
-
+// create socket for cloud
 var io_cloud = require('socket.io')(https_socket);
 
 
-//switching to have heroku working.... (weird)
-if(process.env.PORT){
-  app.listen(regular_port, function(){
-    console.log('CLOUD listening APP on heroku:' + regular_port);
-  }).on('error', function(err) {
-    console.log('\n------------------------------------\nNetworking ERROR.\nCannot listen to: cloud:' + regular_port + '\nPlease check your Network settings\n------------------------------------\n');
-    process.exit();
-  });
-
-}else{
-
-  https_cloud.listen(regular_port, function(){
-    console.log('CLOUD listening APP events CloudServer:3002');
-  }).on('error', function(err) {
-    console.log('\n------------------------------------\nNetworking ERROR.\nCannot listen to: 9001 on CloudServer\nPlease check your Network settings\n------------------------------------\n');
-    process.exit();
-  });
-
-}
+https_cloud.listen(regular_port, 'hyland.pw', function(){
+  console.log('CLOUD listening APP events CloudServer:' + regular_port);
+}).on('error', function(err) {
+  console.log('\n------------------------------------\nNetworking ERROR.\nCannot listen to: '+regular_port+' on CloudServer\nPlease check your Network settings\n------------------------------------\n' + err);
+  process.exit();
+});
 
 
 https_socket.listen(9001, function(){
@@ -86,18 +56,6 @@ https_socket.listen(9001, function(){
   console.log('\n------------------------------------\nNetworking ERROR.\nCannot listen to: 9001 on CloudServer\nPlease check your Network settings\n------------------------------------\n');
   process.exit();
 });
-
-// //start express LIVE (for streaming)
-// https_stream_cloud.listen(3002, function(){
-//   console.log('CLOUD listening STREAM events CloudServer:3002');
-// }).on('error', function(err) {
-//   console.log('\n------------------------------------\nNetworking ERROR.\nCannot listen to: 3002 on CloudServer\nPlease check your Network settings\n------------------------------------\n');
-//   process.exit();
-// });
-
-
-
-/*app.use('/rt', ExpressPeerServer(https_stream_cloud, {debug: 3}));*/
 
 
 
@@ -135,16 +93,13 @@ io_cloud.on('connection', function(socket){
 });
 
 
-
-
-app.get('/', function(req, res){
+//set app routes
+app.get('/cloud', function(req, res){
   res.sendFile(__dirname + '/views/index.html');
 });
-
-app.get('/client', function(req, res){
+app.get('/', function(req, res){
   res.sendFile(__dirname + '/views/client.html');
 });
-
 
 
 
